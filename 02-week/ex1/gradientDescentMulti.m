@@ -19,7 +19,10 @@ for iter = 1:num_iters
 
 
 
-
+    deltaCost = X' * (X * theta - y) / m;
+    % fprintf('%f\n', deltaCost);
+    theta = theta .- (alpha * deltaCost);
+    % fprintf('%f\n', theta);
 
 
 
