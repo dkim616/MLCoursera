@@ -30,6 +30,8 @@ J = 0;
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
 
+% fprintf('SIZE OF THETA 1 grad: %f\n', size(Theta1_grad));
+
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
 %               following parts.
@@ -62,23 +64,71 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% fprintf('y %f\n', y);
+
+new_y = zeros(m, num_labels);
+for i = 1:m
+  % fprintf('y %f\n', y(i));
+  new_y(i, y(i)) = 1;
+end
+% fprintf('new_y %f\n', new_y);
+
+in1 = [ones(m,1), X];
+a1 = X;
+z2 = in1 * Theta1';
+a2 = sigmoid(z2);
+% fprintf('size %f\n', size(a2));
+
+in2 = [ones(m,1), a2];
+z3 = in2 * Theta2';
+a3 = sigmoid(z3);
+% fprintf('size2 %f\n', size(a3));
+
+% fprintf('%f\n', Theta1);
+reduced_theta1 = Theta1(:, 2:input_layer_size+1);
+theta1_sum = sum(sum(reduced_theta1 .* reduced_theta1));
+
+reduced_theta2 = Theta2(:, 2:hidden_layer_size+1);
+theta2_sum = sum(sum(reduced_theta2 .* reduced_theta2));
+
+J = sum(sum((-new_y .* log(a3) .- (1 .- new_y) .* log(1 .- a3)) / m, 2)) + lambda / (2 * m) * (theta1_sum + theta2_sum);
+% J = (-y' * log(a3) .- (1 .- y)' * log(1 .- a3)) / m + lambda / (2 * m) * combTheta' * combTheta;
 
 
+% delta3 = a3 .- new_y;
+% fprintf('SIZE OF Delta 3: %f\n', size(delta3));
 
+% delta2 = (delta3 * Theta2)(:, 2:end) .* sigmoidGradient(z2);
+% delta2 = delta2(2:end);
 
+for t = 1:m
 
+  a1 = X(t,:);
+  in1 = [1, X(t,:)];
+  z2 = in1 * Theta1';
+  a2 = sigmoid(z2);
+  in2 = [1, sigmoid(z2)];
+  z3 = in2 * Theta2';
+  a3 = sigmoid(z3);
 
+  delta3 = a3 .- new_y(t,:);
+  delta2 = (delta3 * Theta2)(2:end) .* sigmoidGradient(z2);
+  % delta2 = delta2(:, 2:end);
+  % fprintf('SIZE OF Delta 2: %f\n', size(delta2));
+  % fprintf('SIZE OF a1: %f\n', size(a1));
+  % fprintf('SIZE OF Delta 3: %f\n', size(delta3));
+  % fprintf('SIZE OF a2: %f\n', size(a2));
 
+  Theta1_grad = Theta1_grad .+ delta2' * in1;
+  Theta2_grad = Theta2_grad .+ delta3' * in2;
 
+end
 
+Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) .+ Theta1(:, 2:end) * lambda; 
+Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) .+ Theta2(:, 2:end) * lambda; 
 
-
-
-
-
-
-
-
+Theta1_grad = Theta1_grad / m;
+Theta2_grad = Theta2_grad / m;
 
 % -------------------------------------------------------------
 
@@ -86,6 +136,5 @@ Theta2_grad = zeros(size(Theta2));
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end

@@ -34,6 +34,8 @@ fprintf('Loading and Visualizing Data ...\n')
 
 load('ex4data1.mat');
 m = size(X, 1);
+fprintf('X size %f\n', size(X));
+fprintf('y size %f\n', size(y));
 
 % Randomly select 100 data points to display
 sel = randperm(size(X, 1));
