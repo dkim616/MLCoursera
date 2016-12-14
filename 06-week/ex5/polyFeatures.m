@@ -15,7 +15,12 @@ X_poly = zeros(numel(X), p);
 %
 % 
 
+exponents = ones(1, p);
+for i = 1:p
+  exponents(i) = i;
+end
 
+X_poly = X .^ exponents;
 
 
 
