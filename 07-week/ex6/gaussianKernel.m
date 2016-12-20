@@ -16,8 +16,8 @@ sim = 0;
 %
 %
 
-
-
+x = norm(x1 - x2) ^ 2;
+sim = exp(-x / 2 / (sigma ^ 2));
 
 
 

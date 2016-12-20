@@ -23,8 +23,24 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+steps = [0.01 0.03 0.1 0.3 1 3 10 30];
+% model = svmTrain(X, y, steps(C_i), @(x1, x2) gaussianKernel(x1, x2, steps(sigma_i)));
+% predictions = svmPredict(model, Xval);
+% err = mean(double(predictions ~+ yval));
+err = 10000000;
 
-
+for C_i = 1:length(steps)
+  for sigma_i = 1:length(steps)
+    model = svmTrain(X, y, steps(C_i), @(x1, x2) gaussianKernel(x1, x2, steps(sigma_i)));
+    predictions = svmPredict(model, Xval);
+    new_err = mean(double(predictions ~= yval));
+    if new_err < err
+      err = new_err;
+      C = steps(C_i);
+      sigma = steps(sigma_i);
+    end
+  end
+end
 
 
 
