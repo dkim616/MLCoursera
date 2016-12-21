@@ -21,7 +21,23 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
+for i = 1:size(idx)
+  sample = X(i,:);
+  sub = sample .- centroids(1,:);
+  sub = sub .^ 2;
+  sub = sum(sub);
+  dist = sub;
+  idx(i) = 1;
+  for j = 2:K
+    sub = sample .- centroids(j,:);
+    sub = sub .^ 2;
+    sub = sum(sub);
+    if sub < dist
+      dist = sub;
+      idx(i) = j;
+    end
+  end
+end
 
 
 
