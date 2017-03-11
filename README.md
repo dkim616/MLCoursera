@@ -1,1 +1,1 @@
-# ml-course
+# ml-coursera
